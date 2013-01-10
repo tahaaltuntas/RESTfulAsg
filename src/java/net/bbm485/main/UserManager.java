@@ -10,10 +10,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
 @Path("users")
-public class Users {
+public class UserManager {
     @Context
     private UriInfo context;
-    public Users() {
+    public UserManager() {
     }
 
     @GET
