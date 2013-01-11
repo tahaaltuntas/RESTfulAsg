@@ -14,7 +14,10 @@ import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
+import java.util.ArrayList;
+import java.util.List;
 import net.bbm485.exceptions.UserNotFoundException;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
 @Path("users")
@@ -28,13 +31,6 @@ public class UserManager {
     public UserManager() {
         db = new DBManager(dbName, collectionName);
         gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-    }
-
-    @GET
-    @Produces("text/plain")
-    public String getText() {
-        //TODO return proper representation object
-        return "bok";
     }
 
     @POST
@@ -75,7 +71,24 @@ public class UserManager {
         }
     }
     
-    
+    @GET
+    @Produces("application/json; charset=UTF-8")
+    @Consumes("application/json; charset=UTF-8")
+    public String showUserList() {
+        JSONObject result = new JSONObject();
+        List<User> userList = db.getUserList();
+        try {
+            result.put("meta", (new JSONObject()).put("code", 200));
+            JSONArray data = new JSONArray();
+            for (User user : userList)
+                data.put(new JSONObject(user.toJson()));
+            result.put("data", userList.size() == 0 ? JSONObject.NULL : data);
+            return result.toString();
+        }
+        catch (JSONException e) {
+            return "";
+        }
+    }
     
     private String getSuccessfulCreateUserMsg() {
         JSONObject msg = new JSONObject();

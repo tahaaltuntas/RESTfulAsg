@@ -4,10 +4,12 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.PUT;
@@ -63,7 +65,6 @@ public class DBManager {
         catch (UnknownHostException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex); // TODO : throw own exception 
         }
-
     }
 
     public User getUser(String userId) throws UserNotFoundException {
@@ -92,6 +93,14 @@ public class DBManager {
         user.setId(id.toString());
         collection.update(dbObj, (DBObject) JSON.parse(user.toJson()));
 
+    }
+    
+    public ArrayList<User> getUserList() {
+        ArrayList<User> userList = new ArrayList<User>();
+        DBCursor cursor = collection.find();
+        while (cursor.hasNext())
+            userList.add(convertDBObject2User(cursor.next()));
+        return userList;
     }
 
     private DBObject convertUser2DBObject(User user) {
