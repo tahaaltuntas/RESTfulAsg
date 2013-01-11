@@ -65,7 +65,7 @@ public class UserManager {
             // TODO : make 200 final static
             result.put("meta", (new JSONObject()).put("code", 200));
             result.put("data", user.toJson());
-            return result.toString();
+            return result.toString().replace("\\\"", "\"");
         }
         catch (UserNotFoundException e) {
             return e.getMessage();
