@@ -12,6 +12,9 @@ import javax.ws.rs.Produces;
 
 import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
+import org.codehaus.jettison.json.JSONObject;
+import com.google.gson.*;
+import java.util.LinkedHashMap;
 
 @Path("users")
 public class UserManager {
@@ -35,7 +38,13 @@ public class UserManager {
     @Produces("application/json")
     @Consumes("application/json")
     public String createUser(String content) {
-        User newUser = new User("id", "name", "fullname", "gender", "birthDate");
-        return "";
+        try {
+            JSONObject userObj = new JSONObject(content).getJSONObject("user");
+            User newUser = (User) new Gson().fromJson(userObj.toString(), User.class);
+            return userObj.toString();
+        }
+        catch (Exception e) {
+            return e.getMessage();
+        }
     }
 }
