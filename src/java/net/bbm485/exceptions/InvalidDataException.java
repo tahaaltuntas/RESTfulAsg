@@ -13,11 +13,11 @@ public class InvalidDataException extends Exception {
     public InvalidDataException(JSONArray errorMsg) {
         msg = "";
         jsonErrorMsg = new JSONObject();
-        JSONObject metaData = new JSONObject();
+        JSONObject metaPart = new JSONObject();
         try {
-            metaData.put("code", "101").put("type", "FieldError");
-            metaData.put("errors", errorMsg);
-            jsonErrorMsg.put("meta", metaData);
+            metaPart.put("code", "101").put("type", "FieldError");
+            metaPart.put("errors", errorMsg);
+            jsonErrorMsg.put("meta", metaPart);
             msg = jsonErrorMsg.toString();
             
         }

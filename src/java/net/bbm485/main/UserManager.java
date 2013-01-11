@@ -14,6 +14,7 @@ import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
+import org.codehaus.jettison.json.JSONException;
 
 @Path("users")
 public class UserManager {
@@ -43,13 +44,23 @@ public class UserManager {
         try {
             JSONObject userObj = new JSONObject(content).getJSONObject("user");
             newUser = (User) gson.fromJson(userObj.toString(), User.class);
-            System.out.println("bok sicccc");
-            System.out.println(newUser.getUserName());
             newUser.checkData();
-            return userObj.toString();
+            db.createUser(newUser);
+            return getSuccessfulCreateUserMsg();
         }
         catch (Exception e) {
             return e.getMessage();
         }
+    }
+    
+    private String getSuccessfulCreateUserMsg() {
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("meta", (new JSONObject()).put("code", "200"));
+            msg.put("data", (new JSONObject()).put("message", "You successfully created a user."));
+        }
+        catch (JSONException e) {
+        }
+        return msg.toString();
     }
 }

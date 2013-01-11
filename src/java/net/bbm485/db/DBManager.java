@@ -2,10 +2,13 @@ package net.bbm485.db;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.types.ObjectId;
 import org.codehaus.jettison.json.JSONObject;
 
 public class DBManager {
@@ -51,5 +54,14 @@ public class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex); // TODO : throw own exception 
         }
 
+    }
+    
+    public void createUser(User user) {
+        DBObject dbObj = (DBObject) JSON.parse(user.toJson());
+        collection.insert(dbObj);
+        ObjectId id = (ObjectId) dbObj.get("_id");
+        user.setId(id.toString());
+        collection.update(dbObj, (DBObject) JSON.parse(user.toJson()));
+        
     }
 }

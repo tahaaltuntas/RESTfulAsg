@@ -1,5 +1,6 @@
 package net.bbm485.db;
 
+import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
 import com.google.gson.annotations.SerializedName;
 import net.bbm485.exceptions.InvalidDataException;
@@ -65,7 +66,8 @@ public class User {
     /**
      * * End of Getters and Setters **
      */
-    public User() { }
+    public User() {
+    }
 
     public User(String id, String userName, String fullName, String gender, String birthDate) {
         setId(id);
@@ -74,7 +76,7 @@ public class User {
         setGender(gender);
         setBirthDate(birthDate);
     }
-    
+
     public void checkData() throws InvalidDataException {
         JSONArray errMsg = new JSONArray();
         JSONObject errObj = null;
@@ -105,17 +107,21 @@ public class User {
                 errMsg.put(errObj);
                 //System.out.println(birthDate);
             }
-            if (errMsg.length() != 0)
+            if (errMsg.length() != 0) {
                 throw new InvalidDataException(errMsg);
+            }
         }
         catch (JSONException e) {
-            
         }
-            
-            
+
+
     }
-    
+
     private boolean isNullorEmpty(String str) {
         return str == null || str.isEmpty() ? true : false;
+    }
+
+    public String toJson() {
+        return new GsonBuilder().serializeNulls().disableHtmlEscaping().create().toJson(this);
     }
 }
