@@ -14,17 +14,18 @@ import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
-import java.util.LinkedHashMap;
 
 @Path("users")
 public class UserManager {
     @Context
     private UriInfo context;
-    private DBManager db;
     private final static String dbName = "restful_db";
     private final static String collectionName = "users";
+    private DBManager db;
+    private Gson gson;
     public UserManager() {
         db = new DBManager(dbName, collectionName);
+        gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
     }
 
     @GET
@@ -38,9 +39,13 @@ public class UserManager {
     @Produces("application/json")
     @Consumes("application/json")
     public String createUser(String content) {
+        User newUser = null;
         try {
             JSONObject userObj = new JSONObject(content).getJSONObject("user");
-            User newUser = (User) new Gson().fromJson(userObj.toString(), User.class);
+            newUser = (User) gson.fromJson(userObj.toString(), User.class);
+            System.out.println("bok sicccc");
+            System.out.println(newUser.getUsername());
+            newUser.checkData();
             return userObj.toString();
         }
         catch (Exception e) {

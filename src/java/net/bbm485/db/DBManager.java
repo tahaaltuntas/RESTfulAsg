@@ -6,6 +6,7 @@ import com.mongodb.Mongo;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.codehaus.jettison.json.JSONObject;
 
 public class DBManager {
 
