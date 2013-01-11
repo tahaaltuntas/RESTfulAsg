@@ -44,7 +44,7 @@ public class UserManager {
             JSONObject userObj = new JSONObject(content).getJSONObject("user");
             newUser = (User) gson.fromJson(userObj.toString(), User.class);
             System.out.println("bok sicccc");
-            System.out.println(newUser.getUsername());
+            System.out.println(newUser.getUserName());
             newUser.checkData();
             return userObj.toString();
         }

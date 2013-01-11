@@ -10,8 +10,8 @@ import org.codehaus.jettison.json.JSONObject;
 public class User {
 
     private String id;
-    
-    private String username;
+    @SerializedName("username")
+    private String userName;
     @SerializedName("fullname")
     private String fullName;
     @SerializedName("gender")
@@ -26,8 +26,8 @@ public class User {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     public String getFullName() {
@@ -46,8 +46,8 @@ public class User {
         this.id = id == null ? "" : id;
     }
 
-    public void setUsername(String username) {
-        this.username = username == null ? "" : username;
+    public void setUserName(String userName) {
+        this.userName = userName == null ? "" : userName;
     }
 
     public void setFullName(String fullName) {
@@ -69,7 +69,7 @@ public class User {
 
     public User(String id, String userName, String fullName, String gender, String birthDate) {
         setId(id);
-        setUsername(userName);
+        setUserName(userName);
         setFullName(fullName);
         setGender(gender);
         setBirthDate(birthDate);
@@ -79,12 +79,12 @@ public class User {
         JSONArray errMsg = new JSONArray();
         JSONObject errObj = null;
         try {
-            if (isNullorEmpty(username)) {
+            if (isNullorEmpty(userName)) {
                 errObj = new JSONObject();
                 errObj.put("fieldName", "username");
                 errObj.put("rejectedValue", JSONObject.NULL);
                 errMsg.put(errObj);
-                //System.out.println(username);
+                //System.out.println(userName);
             }
             if (isNullorEmpty(fullName)) {
                 errObj = new JSONObject();
