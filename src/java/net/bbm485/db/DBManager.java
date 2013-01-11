@@ -1,5 +1,7 @@
 package net.bbm485.db;
 
+import com.google.gson.GsonBuilder;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -8,7 +10,11 @@ import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.PUT;
+import net.bbm485.exceptions.UserNotFoundException;
 import org.bson.types.ObjectId;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class DBManager {
@@ -19,7 +25,9 @@ public class DBManager {
     private String dbName;
     private String collectionName;
 
-    /*** Getters and Setters ***/
+    /**
+     * * Getters and Setters **
+     */
     public String getDbName() {
         return dbName;
     }
@@ -35,8 +43,10 @@ public class DBManager {
     private void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
     }
-    /*** End of Getters and Setters ***/
-    
+
+    /**
+     * * End of Getters and Setters **
+     */
     public DBManager(String dbName, String collectionName) {
         setDbName(dbName);
         setCollectionName(collectionName);
@@ -55,13 +65,40 @@ public class DBManager {
         }
 
     }
-    
+
+    public User getUser(String userId) throws UserNotFoundException {
+        try {
+            DBObject obj = new BasicDBObject("_id", new ObjectId(userId));
+            DBObject userObj = collection.findOne(obj);
+            User user = convertDBObject2User(userObj);
+            return user;
+        }
+        catch (IllegalArgumentException e) {
+            JSONObject errorMsg = new JSONObject();
+            try {
+                errorMsg.put("fieldName", "userId").put("rejectedValue", userId);
+            }
+            catch (JSONException ex) {
+            
+            }
+            throw new UserNotFoundException(errorMsg);
+        }
+    }
+
     public void createUser(User user) {
         DBObject dbObj = (DBObject) JSON.parse(user.toJson());
         collection.insert(dbObj);
         ObjectId id = (ObjectId) dbObj.get("_id");
         user.setId(id.toString());
         collection.update(dbObj, (DBObject) JSON.parse(user.toJson()));
-        
+
+    }
+
+    private DBObject convertUser2DBObject(User user) {
+        return (DBObject) JSON.parse(user.toJson());
+    }
+
+    private User convertDBObject2User(DBObject obj) {
+        return new GsonBuilder().serializeNulls().create().fromJson(JSON.serialize(obj), User.class);
     }
 }

@@ -14,6 +14,7 @@ import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
+import net.bbm485.exceptions.UserNotFoundException;
 import org.codehaus.jettison.json.JSONException;
 
 @Path("users")
@@ -37,8 +38,8 @@ public class UserManager {
     }
 
     @POST
-    @Produces("application/json")
-    @Consumes("application/json")
+    @Produces("application/json; charset=UTF-8")
+    @Consumes("application/json; charset=UTF-8")
     public String createUser(String content) {
         User newUser = null;
         try {
@@ -53,10 +54,33 @@ public class UserManager {
         }
     }
     
+    @GET
+    @Produces("application/json; charset=UTF-8")
+    @Consumes("application/json; charset=UTF-8")
+    @Path("/{userId}")
+    public String showUser(@PathParam("userId") String  userId) {
+        JSONObject result = new JSONObject();
+        try {
+            User user = db.getUser(userId);
+            // TODO : make 200 final static
+            result.put("meta", (new JSONObject()).put("code", 200));
+            result.put("data", user.toJson());
+            return result.toString();
+        }
+        catch (UserNotFoundException e) {
+            return e.getMessage();
+        }
+        catch (JSONException e) {
+            return e.getMessage();
+        }
+    }
+    
+    
+    
     private String getSuccessfulCreateUserMsg() {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("meta", (new JSONObject()).put("code", "200"));
+            msg.put("meta", (new JSONObject()).put("code", 200));
             msg.put("data", (new JSONObject()).put("message", "You successfully created a user."));
         }
         catch (JSONException e) {
