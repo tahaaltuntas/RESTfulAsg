@@ -1,8 +1,11 @@
 package net.bbm485.db;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
 import com.google.gson.annotations.SerializedName;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.bbm485.exceptions.InvalidDataException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -77,7 +80,7 @@ public class User {
         setBirthDate(birthDate);
     }
 
-    public void checkData() throws InvalidDataException {
+    public void checkInfo() throws InvalidDataException {
         JSONArray errMsg = new JSONArray();
         JSONObject errObj = null;
         try {
@@ -115,6 +118,22 @@ public class User {
         }
 
 
+    }
+    
+    public void updateInfo(JSONObject info) {
+        Gson gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+        User dummyUser = (User) gson.fromJson(info.toString(), User.class);
+        if (!isNullorEmpty(dummyUser.getUserName()))
+            setUserName(dummyUser.getUserName());
+        
+        if (!isNullorEmpty(dummyUser.getFullName()))
+            setFullName(dummyUser.getFullName());
+        
+        if (!isNullorEmpty(dummyUser.getGender()))
+            setGender(dummyUser.getGender());
+        
+        if (!isNullorEmpty(dummyUser.getBirthDate()))
+            setBirthDate(dummyUser.getBirthDate());
     }
 
     private boolean isNullorEmpty(String str) {

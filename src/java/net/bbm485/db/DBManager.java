@@ -92,9 +92,8 @@ public class DBManager {
         ObjectId id = (ObjectId) dbObj.get("_id");
         user.setId(id.toString());
         collection.update(dbObj, (DBObject) JSON.parse(user.toJson()));
-
     }
-    
+
     public ArrayList<User> getUserList() {
         ArrayList<User> userList = new ArrayList<User>();
         DBCursor cursor = collection.find();
@@ -103,6 +102,25 @@ public class DBManager {
         return userList;
     }
 
+    public void updateUser(String userId, JSONObject info) throws UserNotFoundException {
+        try {
+            DBObject obj = new BasicDBObject("_id", new ObjectId(userId));
+            DBObject userObj = collection.findOne(obj);
+            User foundUser = convertDBObject2User(userObj);
+            foundUser.updateInfo(info);
+            collection.update(userObj, convertUser2DBObject(foundUser));
+        }
+        catch (Exception e) {
+            JSONObject errorMsg = new JSONObject();
+            try {
+                errorMsg.put("fieldName", "userId").put("rejectedValue", userId);
+            }
+            catch (JSONException ex) {
+            }
+            throw new UserNotFoundException(errorMsg);
+        }
+    }
+    
     private DBObject convertUser2DBObject(User user) {
         return (DBObject) JSON.parse(user.toJson());
     }

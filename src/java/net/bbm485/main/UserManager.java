@@ -14,7 +14,6 @@ import net.bbm485.db.DBManager;
 import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
-import java.util.ArrayList;
 import java.util.List;
 import net.bbm485.exceptions.UserNotFoundException;
 import org.codehaus.jettison.json.JSONArray;
@@ -41,7 +40,7 @@ public class UserManager {
         try {
             JSONObject userObj = new JSONObject(content).getJSONObject("user");
             newUser = (User) gson.fromJson(userObj.toString(), User.class);
-            newUser.checkData();
+            newUser.checkInfo();
             db.createUser(newUser);
             return getSuccessfulCreateUserMsg();
         }
@@ -87,6 +86,27 @@ public class UserManager {
         }
         catch (JSONException e) {
             return "";
+        }
+    }
+    
+    
+    @PUT
+    @Produces("application/json; charset=UTF-8")
+    @Consumes("application/json; charset=UTF-8")
+    @Path("/{userId}/")
+    public String updateUser(@PathParam("userId") String userId, String info) {
+        // TODO : arrange exceptions
+  
+        try {
+            JSONObject result = new JSONObject();
+            JSONObject jsonInfo = new JSONObject(info).getJSONObject("user");
+            db.updateUser(userId, jsonInfo);
+            result.put("meta", (new JSONObject()).put("code", 200));
+            result.put("data", (new JSONObject()).put("message", "You successfully updated user."));
+            return result.toString();
+        }
+        catch (Exception e) {
+            return e.getMessage();
         }
     }
     
