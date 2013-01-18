@@ -15,6 +15,7 @@ import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
 import java.util.List;
+import javax.ws.rs.DELETE;
 import net.bbm485.exceptions.UserNotFoundException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -42,7 +43,7 @@ public class UserManager {
             newUser = (User) gson.fromJson(userObj.toString(), User.class);
             newUser.checkInfo();
             db.createUser(newUser);
-            return getSuccessfulCreateUserMsg();
+            return getSuccessfulMsg("You successfully created a user.");
         }
         catch (Exception e) {
             return e.getMessage();
@@ -90,31 +91,43 @@ public class UserManager {
     @PUT
     @Produces("application/json; charset=UTF-8")
     @Consumes("application/json; charset=UTF-8")
-    @Path("/{userId}/")
+    @Path("/{userId}/") // TODO: delete last ch
     public String updateUser(@PathParam("userId") String userId, String info) {
         // TODO : arrange exceptions
   
         try {
-            JSONObject result = new JSONObject();
             JSONObject jsonInfo = new JSONObject(info).getJSONObject("user");
             db.updateUser(userId, jsonInfo);
-            result.put("meta", (new JSONObject()).put("code", 200));
-            result.put("data", (new JSONObject()).put("message", "You successfully updated user."));
-            return result.toString();
+            return getSuccessfulMsg("You successfully updated user.");
         }
         catch (Exception e) {
             return e.getMessage();
         }
     }
     
-    private String getSuccessfulCreateUserMsg() {
-        JSONObject msg = new JSONObject();
+    @DELETE
+    @Produces("application/json; charset=UTF-8")
+    @Consumes("application/json; charset=UTF-8")
+    @Path("/{userId}")
+    public String deleteUser(@PathParam("userId") String userId) {
         try {
-            msg.put("meta", (new JSONObject()).put("code", 200));
-            msg.put("data", (new JSONObject()).put("message", "You successfully created a user."));
+            db.deleteUser(userId);
+            return getSuccessfulMsg("You successfully deleted the user.");
+        }
+        catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+    
+    private String getSuccessfulMsg(String msg) {
+        // TODO : convert other successful messages
+        JSONObject msgObj = new JSONObject();
+        try {
+            msgObj.put("meta", (new JSONObject()).put("code", 200));
+            msgObj.put("data", (new JSONObject()).put("message", msg));
         }
         catch (JSONException e) {
         }
-        return msg.toString();
+        return msgObj.toString();
     }
 }

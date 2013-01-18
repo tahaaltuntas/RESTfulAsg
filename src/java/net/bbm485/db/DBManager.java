@@ -65,6 +65,9 @@ public class DBManager {
         catch (UnknownHostException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex); // TODO : throw own exception 
         }
+        catch (Exception ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public User getUser(String userId) throws UserNotFoundException {
@@ -109,6 +112,23 @@ public class DBManager {
             User foundUser = convertDBObject2User(userObj);
             foundUser.updateInfo(info);
             collection.update(userObj, convertUser2DBObject(foundUser));
+        }
+        catch (Exception e) {
+            JSONObject errorMsg = new JSONObject();
+            try {
+                errorMsg.put("fieldName", "userId").put("rejectedValue", userId);
+            }
+            catch (JSONException ex) {
+            }
+            throw new UserNotFoundException(errorMsg);
+        }
+    }
+    
+    public void deleteUser(String userId) throws UserNotFoundException {
+        try {
+            DBObject obj = new BasicDBObject("_id", new ObjectId(userId));
+            DBObject userObj = collection.findOne(obj);
+            collection.remove(userObj);
         }
         catch (Exception e) {
             JSONObject errorMsg = new JSONObject();
