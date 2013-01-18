@@ -2,14 +2,13 @@ package net.bbm485.db;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.BasicDBObject;
 import com.google.gson.annotations.SerializedName;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.bbm485.exceptions.InvalidDataException;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import net.bbm485.exceptions.InvalidDataException;
 
 public class User {
 
@@ -108,7 +107,6 @@ public class User {
                 errObj.put("fieldName", "birthDate");
                 errObj.put("rejectedValue", JSONObject.NULL);
                 errMsg.put(errObj);
-                //System.out.println(birthDate);
             }
             if (errMsg.length() != 0) {
                 throw new InvalidDataException(errMsg);
@@ -116,8 +114,6 @@ public class User {
         }
         catch (JSONException e) {
         }
-
-
     }
     
     public void updateInfo(JSONObject info) {

@@ -1,9 +1,6 @@
 package net.bbm485.main;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
@@ -15,6 +12,7 @@ import net.bbm485.db.User;
 import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.*;
 import java.util.List;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import net.bbm485.exceptions.UserNotFoundException;
 import org.codehaus.jettison.json.JSONArray;
@@ -22,12 +20,11 @@ import org.codehaus.jettison.json.JSONException;
 
 @Path("users")
 public class UserManager {
-    @Context
-    private UriInfo context;
     private final static String dbName = "restful_db";
     private final static String collectionName = "users";
     private DBManager db;
     private Gson gson;
+
     public UserManager() {
         db = new DBManager(dbName, collectionName);
         gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();

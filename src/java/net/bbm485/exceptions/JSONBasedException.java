@@ -1,7 +1,5 @@
 package net.bbm485.exceptions;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -27,7 +25,6 @@ public abstract class JSONBasedException extends Exception {
         }
         catch (JSONException ex) {
         }
-        
     }
     
     public JSONBasedException(JSONObject errorMsg, int errorId, String errorType) {
@@ -41,7 +38,6 @@ public abstract class JSONBasedException extends Exception {
             metaPart.put("errors", errorMsg);
             jsonErrorMsg.put("meta", metaPart);
             msg = jsonErrorMsg.toString();
-            
         }
         catch (JSONException ex) {
         }
