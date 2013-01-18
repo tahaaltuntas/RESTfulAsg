@@ -51,7 +51,6 @@ public class UserManager {
     
     @GET
     @Produces("application/json; charset=UTF-8")
-    @Consumes("application/json; charset=UTF-8")
     @Path("/{userId}")
     public String showUser(@PathParam("userId") String  userId) {
         JSONObject result = new JSONObject();
@@ -72,7 +71,6 @@ public class UserManager {
     
     @GET
     @Produces("application/json; charset=UTF-8")
-    @Consumes("application/json; charset=UTF-8")
     public String showUserList() {
         JSONObject result = new JSONObject();
         List<User> userList = db.getUserList();
@@ -88,7 +86,6 @@ public class UserManager {
             return "";
         }
     }
-    
     
     @PUT
     @Produces("application/json; charset=UTF-8")
