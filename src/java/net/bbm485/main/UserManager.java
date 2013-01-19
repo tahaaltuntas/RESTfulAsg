@@ -19,21 +19,23 @@ import net.bbm485.db.User;
 
 @Path("users")
 public class UserManager {
-    private final static String dbName = "restful_db";
-    private final static String collectionName = "users";
+    private final static String DBNAME = "restful_db";
+    private final static String COLLECTION_NAME = "users";
+    private final static int INDENT_FACTOR = 4;
+    private final static String MEDIA_TYPE = "application/json; charset=UTF-8";
     private DBManager db;
     private Gson gson;
     private JsonFormatter jsonFormatter;
 
     public UserManager() {
-        db = new DBManager(dbName, collectionName);
+        db = new DBManager(DBNAME, COLLECTION_NAME);
         gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
-        jsonFormatter = new JsonFormatter();
+        jsonFormatter = new JsonFormatter(INDENT_FACTOR);
     }
 
     @POST
-    @Produces("application/json; charset=UTF-8")
-    @Consumes("application/json; charset=UTF-8")
+    @Produces(MEDIA_TYPE)
+    @Consumes(MEDIA_TYPE)
     public String createUser(String content) {
         User newUser = null;
         try {
@@ -44,12 +46,12 @@ public class UserManager {
             return jsonFormatter.createSuccessfulMsg("You successfully created a user.");
         }
         catch (Exception e) {
-            return e.getMessage();
+            return jsonFormatter.formatJsonString(e.getMessage());
         }
     }
     
     @GET
-    @Produces("application/json; charset=UTF-8")
+    @Produces(MEDIA_TYPE)
     @Path("/{userId}")
     public String showUser(@PathParam("userId") String  userId) {
         try {
@@ -57,20 +59,20 @@ public class UserManager {
             return jsonFormatter.showUser(user);
         }
         catch (UserNotFoundException e) {
-            return e.getMessage();
+            return jsonFormatter.formatJsonString(e.getMessage());
         }
     }
     
     @GET
-    @Produces("application/json; charset=UTF-8")
+    @Produces(MEDIA_TYPE)
     public String showUserList() {
         List<User> userList = db.getUserList();
         return jsonFormatter.showUserList(userList);
     }
     
     @PUT
-    @Produces("application/json; charset=UTF-8")
-    @Consumes("application/json; charset=UTF-8")
+    @Produces(MEDIA_TYPE)
+    @Consumes(MEDIA_TYPE)
     @Path("/{userId}")
     public String updateUser(@PathParam("userId") String userId, String info) {
         // TODO : arrange exceptions
@@ -80,13 +82,13 @@ public class UserManager {
             return jsonFormatter.createSuccessfulMsg("You successfully updated user.");
         }
         catch (Exception e) {
-            return e.getMessage();
+            return jsonFormatter.formatJsonString(e.getMessage());
         }
     }
     
     @DELETE
-    @Produces("application/json; charset=UTF-8")
-    @Consumes("application/json; charset=UTF-8")
+    @Produces(MEDIA_TYPE)
+    @Consumes(MEDIA_TYPE)
     @Path("/{userId}")
     public String deleteUser(@PathParam("userId") String userId) {
         try {
@@ -94,7 +96,7 @@ public class UserManager {
             return jsonFormatter.createSuccessfulMsg("You successfully deleted the user.");
         }
         catch (Exception e) {
-            return e.getMessage();
+            return jsonFormatter.formatJsonString(e.getMessage());
         }
     }
     

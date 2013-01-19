@@ -88,7 +88,6 @@ public class User {
                 errObj.put("fieldName", "username");
                 errObj.put("rejectedValue", JSONObject.NULL);
                 errMsg.put(errObj);
-                //System.out.println(userName);
             }
             if (isNullorEmpty(fullName)) {
                 errObj = new JSONObject();
