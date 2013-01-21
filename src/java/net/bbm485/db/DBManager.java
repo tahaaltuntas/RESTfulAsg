@@ -75,9 +75,11 @@ public class DBManager {
             DBObject obj = new BasicDBObject("_id", new ObjectId(userId));
             DBObject userObj = collection.findOne(obj);
             User user = convertDBObject2User(userObj);
+            if (user == null)
+                throw new Exception();
             return user;
         }
-        catch (IllegalArgumentException e) {
+        catch (Exception e) {
             JSONObject errorMsg = new JSONObject();
             try {
                 errorMsg.put("fieldName", "userId").put("rejectedValue", userId);
