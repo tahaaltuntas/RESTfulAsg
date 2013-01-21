@@ -2,6 +2,7 @@ package net.bbm485.db;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -137,5 +138,14 @@ public class User {
 
     public String toJson() {
         return new GsonBuilder().serializeNulls().disableHtmlEscaping().create().toJson(this);
+    }
+    
+    public JSONObject toJsonObject() {
+        try {
+            return new JSONObject(this.toJson());
+        }
+        catch (JSONException e) {
+            return new JSONObject();
+        }
     }
 }

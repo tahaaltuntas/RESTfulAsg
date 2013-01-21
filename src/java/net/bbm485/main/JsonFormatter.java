@@ -57,7 +57,7 @@ public class JsonFormatter {
         try {
             JSONObject result = new JSONObject();
             result.put("meta", (new JSONObject()).put("code", 200));
-            result.put("data", user.toJson());
+            result.put("data", user.toJsonObject());
             return indentation ? result.toString(indentFactor).replace("\\\"", "\"") 
                                : result.toString().replace("\\\"", "\"");
         }
