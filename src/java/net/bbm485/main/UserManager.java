@@ -75,7 +75,6 @@ public class UserManager {
     @Consumes(MEDIA_TYPE)
     @Path("/{userId}")
     public String updateUser(@PathParam("userId") String userId, String info) {
-        // TODO : arrange exceptions
         try {
             JSONObject jsonInfo = new JSONObject(info).getJSONObject("user");
             db.updateUser(userId, jsonInfo);

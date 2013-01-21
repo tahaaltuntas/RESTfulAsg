@@ -63,7 +63,7 @@ public class DBManager {
 
         }
         catch (UnknownHostException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex); // TODO : throw own exception 
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
